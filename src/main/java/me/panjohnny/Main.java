@@ -91,7 +91,7 @@ public class Main extends Application {
     public void draw() {
         glBindTexture(GL_TEXTURE_2D, jeff); // Bind the texture
 
-        //glRotatef(rotation, 1, 1, 1); // Rotate the cube
+        glRotatef(rotation, 1, 0, 0); // Rotate the cube
 
         cube.draw();
     }

@@ -78,7 +78,7 @@ public class Cube implements Drawable {
             1f, 1f,   // Top right
             0f, 0f,   // Bottom left
             1f, 1f,   // Top right
-            1f, 0f,   // Top left
+            0f, 1f,   // Top left
 
             // Top face
             0f, 0f,   // Bottom left
@@ -89,12 +89,12 @@ public class Cube implements Drawable {
             0f, 1f,   // Top left
 
             // Bottom face
-            0f, 1f,   // Top left
-            1f, 1f,   // Top right
-            1f, 0f,   // Bottom right
-            0f, 1f,   // Top left
-            0f, 0f,   // Bottom left
-            1f, 0f,   // Bottom right
+            0f, 0f,   // Top left
+            1f, 0f,   // Top right
+            1f, 1f,   // Bottom right
+            0f, 0f,   // Top left
+            1f, 1f,   // Bottom left
+            0f, 1f,   // Bottom right
 
             // Right face
             0f, 0f,   // Bottom left
