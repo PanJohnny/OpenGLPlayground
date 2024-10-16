@@ -2,6 +2,7 @@ package me.panjohnny.api.glfw;
 
 import me.panjohnny.api.wrap.PointerWrapper;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -14,6 +15,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -101,6 +103,18 @@ public class GLFWWindow extends PointerWrapper {
 
     public void setMouseButtonCallback(GLFWMouseButtonCallback callback) {
         glfwSetMouseButtonCallback(pointer, callback);
+    }
+
+    public void setCursorCallback(GLFWCursorPosCallback callback) {
+        glfwSetCursorPosCallback(pointer, callback);
+    }
+
+    public int[] getSize() {
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+
+        glfwGetWindowSize(pointer, width, height);
+        return new int[] {width.get(), height.get()};
     }
 
     /**

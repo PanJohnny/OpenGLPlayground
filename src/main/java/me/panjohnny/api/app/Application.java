@@ -1,7 +1,10 @@
 package me.panjohnny.api.app;
 
+import me.panjohnny.api.opengl.ShaderUtils;
 import me.panjohnny.api.wrap.PointerWrapper;
+import org.lwjgl.opengl.GL20;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public abstract class Application {
@@ -34,5 +37,17 @@ public abstract class Application {
         } catch (Exception e) {
             throw new RuntimeException("Failed to create pointer wrapper for " + clazz.getName(), e);
         }
+    }
+
+    protected int loadShaderFiles(String vertexPath, String fragmentPath) throws IOException {
+        return ShaderUtils.createShaderProgramFromFile(vertexPath, fragmentPath);
+    }
+
+    protected int loadShaderResources(String vertexPath, String fragmentPath) throws IOException {
+        return ShaderUtils.createShaderProgramFromResource(vertexPath, fragmentPath);
+    }
+
+    protected void useShader(int shader) {
+        GL20.glUseProgram(shader);
     }
 }

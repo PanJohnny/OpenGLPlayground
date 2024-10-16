@@ -2,8 +2,10 @@ package me.panjohnny;
 
 import me.panjohnny.api.app.Application;
 import me.panjohnny.api.glfw.GLFWWindow;
+import me.panjohnny.api.opengl.GLObjectHelper;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.opengl.GL11;
@@ -19,11 +21,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main extends Application {
     private static final System.Logger LOGGER = System.getLogger(Main.class.getName());
-    public static final float FLOAT = 0.5f;
-    private Cube cube;
     private int jeff;
+    private Triangle triangle;
 
-    private float rotation = 0.5f;
 
     public static void main(String[] args) {
         new Main();
@@ -31,69 +31,58 @@ public class Main extends Application {
 
     @Override
     public void init() {
-        cube = new Cube();
     }
 
     @Override
     public void loadGraphics() {
-        // Load texture from the file ./jeff.png
+//        int shader;
+//        try {
+//            shader = loadShaderResources("/vertex.glsl", "/fragment.glsl");
+//            // useShader(shader);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        //Create VBO and IBO for a 3d triangle
+        float[] vertices = {
+                0, 0, 0,
+                1, 0, 0,
+                1, 1, 0,
+
+                0, 1, 0,
+                0, 0, 1,
+                1, 0, 1,
+
+                1, 1, 1,
+                0, 1, 1
+        };
+
+        float[] texCoords = {
+                0, 0,
+                1, 0,
+                1, 1,
+
+                0, 1,
+                0, 0,
+                1, 0,
+
+                1, 1,
+                0, 1
+        };
+
+        int vbo = GLObjectHelper.createVBO(vertices);
+        int ibo = GLObjectHelper.createTexCoordsVBO(texCoords);
+
         jeff = loadTexture("bezos.png", (w, h) -> {
             System.out.println("Loaded texture with size: " + w + "x" + h);
         });
 
-        var window = getWrapper(GLFWWindow.class);
-        try {
-            window.setIcon(new GLFWWindow.ImageData[]{
-                    GLFWWindow.ImageData.fromFile("bezos.png", 128, 128)
-            });
-        } catch (IOException e) {
-            LOGGER.log(System.Logger.Level.ERROR, "Failed to load icon", e);
-        }
-
-        cube.prepare();
-
-        // Add key listeners to the window and move the cube based on the key pressed
-        window.setKeyCallback(new GLFWKeyCallback() {
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (action == GLFW.GLFW_PRESS) {
-                    switch (key) {
-                        case GLFW.GLFW_KEY_W:
-                            cube.move(0, 0, -1);
-                            break;
-                        case GLFW.GLFW_KEY_S:
-                            cube.move(0, 0, 1);
-                            break;
-                        case GLFW.GLFW_KEY_A:
-                            cube.move(-1, 0, 0);
-                            break;
-                        case GLFW.GLFW_KEY_D:
-                            cube.move(1, 0, 0);
-                            break;
-                        case GLFW.GLFW_KEY_SPACE:
-                            cube.move(0, 1, 0);
-                            break;
-                        case GLFW.GLFW_KEY_LEFT_SHIFT:
-                            cube.move(0, -1, 0);
-                            break;
-                        case GLFW.GLFW_KEY_O:
-                            glScalef(0.5f, 0.5f, 0.5f);
-                            break;
-                        case GLFW.GLFW_KEY_P:
-                            cube.shoot();
-                    }
-                }
-            }
-        });
+        triangle = new Triangle(0, 1, 0, 1, 1, 1, 0, 0, 0, vbo, ibo, jeff, vertices.length);
     }
 
     @Override
     public void draw() {
-        glBindTexture(GL_TEXTURE_2D, jeff); // Bind the texture
-
-        glRotatef(rotation, 1, 0, 0); // Rotate the cube
-
-        cube.draw();
+        triangle.draw();
     }
 
     /**
